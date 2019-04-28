@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.terminalConfigure.mapper.TBdTerminalConfigureMapper" >
+  <resultMap id="tBdTerminalConfigureResultMap" type="com.etms.terminalConfigure.pojo.TBdTerminalConfigure" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ConfigureAlias" property="configureAlias" jdbcType="VARCHAR" />
+    <result column="ParameterSet" property="parameterSet" jdbcType="VARCHAR" />
+    <result column="ParameterLength" property="parameterLength" jdbcType="INTEGER" />
+    <result column="ApplicationCode" property="applicationCode" jdbcType="VARCHAR" />
+    <result column="HeartBeat" property="heartBeat" jdbcType="INTEGER" />
+    <result column="DataTimeOut" property="dataTimeOut" jdbcType="INTEGER" />
+    <result column="DataSendCount" property="dataSendCount" jdbcType="INTEGER" />
+    <result column="MessageTimeOut" property="messageTimeOut" jdbcType="INTEGER" />
+    <result column="MessageSendCount" property="messageSendCount" jdbcType="INTEGER" />
+    <result column="SleepTime" property="sleepTime" jdbcType="INTEGER" />
+    <result column="PPPNumber" property="pppNumber" jdbcType="VARCHAR" />
+    <result column="PPPUser" property="pppUser" jdbcType="VARCHAR" />
+    <result column="PPPPsw" property="pppPsw" jdbcType="VARCHAR" />
+    <result column="MDMSAddress" property="mdmsAddress" jdbcType="VARCHAR" />
+    <result column="MDMSTCP" property="mdmsTcp" jdbcType="INTEGER" />
+    <result column="MDMSUDP" property="mdmsUdp" jdbcType="INTEGER" />
+    <result column="DNSAddress" property="dnsAddress" jdbcType="VARCHAR" />
+    <result column="M2MNumber" property="m2mNumber" jdbcType="VARCHAR" />
+    <result column="ApplicationAddress" property="applicationAddress" jdbcType="VARCHAR" />
+    <result column="ApplicationPort" property="applicationPort" jdbcType="INTEGER" />
+    <result column="ApplicationNumber" property="applicationNumber" jdbcType="VARCHAR" />
+    <result column="UIMPsw" property="uimPsw" jdbcType="VARCHAR" />
+    <result column="PortSpeed" property="portSpeed" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <insert id="insert" parameterType="TBdTerminalConfigure">
+  	insert into t_bd_terminalconfigure (ConfigureAlias,ParameterSet,ParameterLength,ApplicationCode,HeartBeat,
+  							   DataTimeOut,DataSendCount,MessageTimeOut,MessageSendCount,SleepTime,
+  							   PPPNumber,PPPUser,PPPPsw,MDMSAddress,MDMSTCP,MDMSUDP,DNSAddress,M2MNumber,
+  							   ApplicationAddress,ApplicationPort,ApplicationNumber,UIMPsw,PortSpeed)
+  	values(#{configureAlias},#{parameterSet},#{parameterLength},#{applicationCode},#{heartBeat},#{dataTimeOut},#{dataSendCount},
+  		   #{messageTimeOut},#{messageSendCount},#{sleepTime},#{pppNumber},#{pppUser},#{pppPsw},#{mdmsAddress},#{mdmsTcp},#{mdmsUdp},
+  		   #{dnsAddress},#{m2mNumber},#{applicationAddress},#{applicationPort},#{applicationNumber},#{uimPsw},#{portSpeed})
+  </insert>
+  
+  <update id="update" parameterType="TBdTerminalConfigure">
+    update t_bd_terminalconfigure set ConfigureAlias=#{configureAlias},ParameterSet=#{parameterSet},ParameterLength=#{parameterLength},
+    								  ApplicationCode=#{applicationCode},HeartBeat=#{heartBeat},DataTimeOut=#{dataTimeOut},dataSendCount=#{dataSendCount},
+    								  MessageTimeOut=#{messageTimeOut},MessageSendCount=#{messageSendCount},SleepTime=#{sleepTime},
+    						          PPPNumber=#{pppNumber},PPPUser=#{pppUser},PPPPsw=#{pppPsw},MDMSAddress=#{mdmsAddress},MDMSTCP=#{mdmsTcp},MDMSUDP=#{mdmsUdp},
+    						          DNSAddress=#{dnsAddress},M2MNumber=#{m2mNumber},ApplicationAddress=#{applicationAddress},ApplicationPort=#{applicationPort},
+    						          ApplicationNumber=#{applicationNumber},UIMPsw=#{uimPsw},PortSpeed=#{portSpeed}
+  	where ID=#{id}
+  </update>
+  
+  <select id="selectAll" resultMap="tBdTerminalConfigureResultMap" >
+    select * from t_bd_terminalconfigure
+  </select>
+  
+  <select id="selectIDAndAlias" resultMap="tBdTerminalConfigureResultMap" >
+    select ID,ConfigureAlias from t_bd_terminalconfigure
+  </select>
+  
+<!-- 通过多条件分页查询，返回数据集 -->
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdTerminalConfigureResultMap" >
+    select ID,ConfigureAlias,ParameterSet,ParameterLength,ApplicationCode,HeartBeat,
+  		   DataTimeOut,DataSendCount,MessageTimeOut,MessageSendCount,SleepTime,
+  		   PPPNumber,PPPUser,PPPPsw,MDMSAddress,MDMSTCP,MDMSUDP,DNSAddress,M2MNumber,
+  		   ApplicationAddress,ApplicationPort,ApplicationNumber,UIMPsw,PortSpeed 
+  		   from t_bd_terminalconfigure
+    <where>
+   		<if test="paramEntity.configureAlias!=null">and ConfigureAlias like #{paramEntity.configureAlias}</if>
+   		
+    </where> 
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	select count(1) from t_bd_terminalconfigure
+  	<where>
+   		<if test="paramEntity.configureAlias!=null">and ConfigureAlias like #{paramEntity.configureAlias}</if>
+    </where> 
+  </select>
+  
+  <delete id="deleteList">
+  	delete from t_bd_terminalconfigure where ID in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete>
+</mapper>

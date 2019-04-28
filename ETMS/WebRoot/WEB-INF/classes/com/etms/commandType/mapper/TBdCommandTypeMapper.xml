@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.commandType.mapper.TBdCommandTypeMapper" >
+  <resultMap id="tBdCommandTypeResultMap" type="com.etms.commandType.pojo.TBdCommandType" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CommandCode" property="commandCode" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+    <result column="CommandText" property="commandText" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="TBdCommandType">
+  	insert into t_bd_commandtype (CommandCode,TypeName,CommandText)
+  	values(#{commandCode},#{typeName},#{commandText})
+  </insert>
+  
+  <update id="update" parameterType="TBdCommandType">
+    update t_bd_commandtype set CommandCode=#{commandCode},TypeName=#{typeName},CommandText=#{commandText}
+  	where ID=#{id}
+  </update>
+  
+  <select id="selectAll" resultMap="tBdCommandTypeResultMap" >
+    select * from t_bd_commandtype    
+  </select>
+  
+  <!-- 通过多条件分页查询，返回数据集 -->
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdCommandTypeResultMap" >
+    select ID,CommandCode,TypeName,CommandText from t_bd_commandtype
+    <where>
+   		<if test="paramEntity.commandCode!=null">and CommandCode like #{paramEntity.commandCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+   		<if test="paramEntity.commandText!=null">and CommandText like #{paramEntity.commandText}</if>
+    </where> 
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	select count(1) from t_bd_commandtype
+  	 <where>
+   		<if test="paramEntity.commandCode!=null">and CommandCode like #{paramEntity.commandCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+   		<if test="paramEntity.commandText!=null">and CommandText like #{paramEntity.commandText}</if>
+    </where> 
+  </select>
+  
+  <delete id="deleteList">
+  	delete from t_bd_commandtype where ID in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.terminalLoginInfo.mapper.TBdTerminalLoginInfoMapper" >
+  <resultMap id="tBdTerminalLoginInfoResultMap" type="com.etms.terminalLoginInfo.pojo.TBdTerminalLoginInfo" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TerminalCode" property="terminalCode" jdbcType="VARCHAR" />
+    <result column="TerminalTypeID" property="terminalTypeID" jdbcType="INTEGER" />
+    <result column="LoginTime" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="LogoutTime" property="logoutTime" jdbcType="TIMESTAMP" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectAll" resultMap="tBdTerminalLoginInfoResultMap" >
+    SELECT * FROM v_bd_terminallogininfo   
+  </select>
+  
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdTerminalLoginInfoResultMap" >
+    SELECT * FROM v_bd_terminallogininfo 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where> 
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	SELECT count(1) FROM v_bd_terminallogininfo 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where> 	
+  </select>
+  
+</mapper>

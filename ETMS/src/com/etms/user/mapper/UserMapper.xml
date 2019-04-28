@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etms.user.mapper.UserMapper">
+  <resultMap id="userResultMap" type="com.etms.user.pojo.User">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="UserName" jdbcType="VARCHAR" property="userName" />
+    <result column="UserPsw" jdbcType="VARCHAR" property="userPsw" />
+    <result column="RealName" jdbcType="VARCHAR" property="realName" />
+   <!--  <result column="RoleID" jdbcType="INTEGER" property="roleId" /> -->
+    <result column="Flag" jdbcType="INTEGER" property="flag" />
+    <result column="Memo" jdbcType="VARCHAR" property="memo" />
+    <association property="role" resultMap="com.etms.role.mapper.RoleMapper.roleResultMap"></association>
+  </resultMap>
+  
+  <insert id="insert" parameterType="User" >
+  	insert into t_sa_user (UserName,RealName,RoleID,Flag,Memo) 
+  	values(#{userName},#{realName},#{role.id},#{flag},#{memo}) 
+  </insert>
+  
+  <select id="selectAll" resultMap="userResultMap" >
+    select u.ID,u.UserName,u.RealName,r.ID RID,r.RoleName,u.Flag,u.Memo from t_sa_user u
+    inner join t_sa_role r on u.RoleID = r.ID
+    and UserName!='admin'
+  </select>
+  
+  <select id="findUserName" parameterType="String" resultType="Integer">
+    select count(1) from t_sa_user where UserName=#{userName} 
+  </select>
+  
+  <select id="login" parameterType="user" resultMap="userResultMap" >
+    select u.ID,u.UserName,u.UserPsw,u.RealName,r.ID RID,r.RoleName,u.Memo from t_sa_user u
+    inner join t_sa_role r on u.RoleID = r.ID
+    and UserName=#{userName} and UserPsw=#{userPsw} and Flag=#{flag}
+  </select>
+  
+  <select id="selectUserPswByUserName" parameterType="String" resultType="String">
+  	select UserPsw from t_sa_user where UserName=#{userName}
+  </select>
+  
+  	<!-- 通过多条件分页查询，返回数据集 -->
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="userResultMap" >
+    select u.ID,u.UserName,u.RealName,r.ID as RID,r.RoleName,u.Flag,u.Memo from t_sa_user u
+    inner join t_sa_role r on u.RoleID = r.ID
+    <where>
+   		<if test="paramEntity.userName!=null">and u.UserName like #{paramEntity.userName}</if>
+    	<if test="paramEntity.realName!=null">and u.RealName like #{paramEntity.realName}</if>
+    	<if test="paramEntity.role!=null">
+    		<if test="paramEntity.role.id!=null">and r.ID like #{paramEntity.role.id}</if>
+    		<if test="paramEntity.role.roleName!=null">and r.RoleName like #{paramEntity.role.roleName}</if>
+    	</if>
+    	<if test="paramEntity.flag!=null">and u.Flag like #{paramEntity.flag}</if>
+    	<if test="paramEntity.memo!=null">and u.Memo like #{paramEntity.memo}</if>
+    	and UserName!='admin'
+    </where> 
+    limit #{start},#{rows}
+  </select>
+  
+	<!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	select count(1) from t_sa_user u
+  	inner join t_sa_role r on u.RoleID = r.ID
+  	<where>
+   		<if test="paramEntity.userName!=null">and u.UserName like #{paramEntity.userName}</if>
+    	<if test="paramEntity.realName!=null">and u.RealName like #{paramEntity.realName}</if>
+    	<if test="paramEntity.role!=null">
+    		<if test="paramEntity.role.id!=null">and r.ID like #{paramEntity.role.id}</if>
+    		<if test="paramEntity.role.roleName!=null">and r.RoleName like #{paramEntity.role.roleName}</if>
+    	</if>
+    	<if test="paramEntity.flag!=null">and u.Flag like #{paramEntity.flag}</if>
+    	<if test="paramEntity.memo!=null">and u.Memo like #{paramEntity.memo}</if> 
+    	and UserName!='admin'
+    </where>
+  </select>
+  
+  <update id="update" parameterType="User">
+  	update t_sa_user set UserName=#{userName},RealName=#{realName},RoleID=#{role.id},Flag=#{flag},Memo=#{memo} 
+  	where ID=#{id}
+  </update>
+  
+  <update id="updateUserPswByUserName">
+  	update t_sa_user set UserPsw=#{arg1} where UserName=#{arg0}
+  </update>
+  
+  <delete id="deleteList">
+  	delete from t_sa_user where UserName in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete> 
+</mapper>

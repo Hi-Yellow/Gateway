@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.terminalCommand.mapper.TBdTerminalCommandMapper" >
+  <resultMap id="tBdTerminalCommandResultMap" type="com.etms.terminalCommand.pojo.TBdTerminalCommand" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
+    <result column="OperateType" property="operateType" jdbcType="INTEGER" />
+    <result column="TerminalCode" property="terminalCode" jdbcType="VARCHAR" />
+    <result column="CommandCode" property="commandCode" jdbcType="VARCHAR" />
+    <result column="CommandText" property="commandText" jdbcType="VARCHAR" />
+    <result column="PortConfigureInfo" property="portConfigureInfo" jdbcType="VARCHAR" />
+    <result column="ExecuteTime" property="executeTime" jdbcType="TIMESTAMP" />
+    <result column="Result" property="result" jdbcType="VARCHAR" />
+    <result column="Executer" property="executer" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+    <result column="ResultType" property="resultType" jdbcType="INTEGER" />
+    <result column="OperateName" property="operateName" jdbcType="VARCHAR" />
+    <result column="ResultContent" property="resultContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectAll" resultMap="tBdTerminalCommandResultMap" >
+    select * from v_bs_terminalcommand
+  </select>
+  
+    <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdTerminalCommandResultMap" >
+    SELECT * FROM v_bs_terminalcommand 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+   		<if test="temp!=null">and ExecuteTime like #{temp}</if>
+   		and OperateType=1
+    </where> 
+    ORDER BY ExecuteTime DESC 
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	SELECT count(1) FROM v_bs_terminalcommand
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+   		<if test="temp!=null">and ExecuteTime like #{temp}</if>
+   		and OperateType=1
+    </where> 	
+  </select>
+  
+  <insert id="insert" parameterType="TBdTerminalCommand">
+  	insert into t_bs_terminalcommand (TerminalCode,CommandCode,CommandText,PortConfigureInfo,Executer,ExecuteTime,OperateType,ResultType)
+  	values(#{terminalCode},#{commandCode},#{commandText},#{portConfigureInfo},#{executer},#{executeTime},#{operateType},#{resultType})
+  </insert>
+  
+  <select id="selectId" resultType="Integer">
+	select ID from v_bs_terminalcommand ORDER BY ID DESC limit 1
+  </select>
+  
+  <select id="selectByIdAndResultType" parameterType="Integer" resultType="Integer">
+	select COUNT(1) from v_bs_terminalcommand WHERE ID=#{ID} AND ResultType = 254 AND OperateType = 1
+  </select>
+  
+  
+<select id="selectNotSuccess" parameterType="Integer" resultType="Integer">
+	select COUNT(1) from v_bs_terminalcommand WHERE ID=#{ID} AND ResultType != 0 AND OperateType = 1
+  </select>
+  
+  <update id="updateResultType" parameterType="Integer">
+    update t_bs_terminalcommand set ResultType=7  where ID=#{ID}
+  </update>
+</mapper>

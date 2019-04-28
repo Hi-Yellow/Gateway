@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.role.mapper.RoleMapper" >
+  <resultMap id="roleResultMap" type="com.etms.role.pojo.Role" >
+    <id column="RID" property="id" jdbcType="INTEGER" />
+    <result column="RoleName" property="roleName" jdbcType="VARCHAR" />
+    <result column="RoleDiscription" property="roleDiscription" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectRoleNameAndID" resultMap="roleResultMap">
+  	select ID as RID,RoleName from t_sa_role 
+  </select>
+  
+	<!-- 
+  	通过多条件分页查询，返回数据集
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="roleResultMap" >
+    select ID,RoleName,RoleDiscription from t_sa_role
+    <where>
+   		<if test="paramEntity.roleName!=null">and RoleName like #{paramEntity.roleName}</if>
+    	<if test="paramEntity.roleDiscription=null">and RoleDiscription like #{paramEntity.roleDiscription}</if>
+    </where> 
+    limit #{start},#{rows}
+  </select>
+  
+	 通过多条件分页查询，返回总记录数
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	select count(1) from t_sa_role
+  	<where>
+   		<if test="paramEntity.roleName!=null">and RoleName like #{paramEntity.roleName}</if>
+    	<if test="paramEntity.roleDiscription!=null">and RoleDiscription like #{paramEntity.roleDiscription}</if>
+    </where> 
+  </select>
+  
+  <update id="update" parameterType="Role">
+  	update t_sa_role set RoleName=#{roleName},RoleDiscription=#{roleDiscription} where ID=#{id}
+  </update>
+  
+  <delete id="deleteList">
+  	delete from t_sa_role where ID in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete> -->
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.terminalProtocol.mapper.TBdTerminalProtocolMapper" >
+  <resultMap id="tBdTerminalProtocolResultMap" type="com.etms.terminalProtocol.pojo.TBdTerminalProtocol" >
+    <result column="ProtocolID" property="protocolId" jdbcType="INTEGER" />
+    <result column="ProtocolName" property="protocolName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <select id="selectAll" resultMap="tBdTerminalProtocolResultMap" >
+    select * from t_bd_terminalprotocol
+  </select>
+</mapper>

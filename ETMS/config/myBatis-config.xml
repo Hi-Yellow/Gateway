@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 配置log4j -->
+	<properties>
+        <property name="dialect" value="mysql" />
+    </properties>
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<!-- 
+		通过package, 可以直接指定package的名字， mybatis会自动扫描你指定包下面的javabean,
+      	并且默认设置一个别名，默认的名字为非限定类名来作为它的别名。    
+       -->
+	<typeAliases>
+	
+		<package name="com.etms.user.pojo"/>
+		<package name="com.etms.core.page"/>
+		<package name="com.etms.role.pojo"/>
+		<package name="com.etms.loginInfo.pojo"/>
+		<package name="com.etms.terminal.pojo"/>
+		<package name="com.etms.terminalConfigure.pojo"/>
+		<package name="com.etms.commandType.pojo"/>
+		<package name="com.etms.terminalProtocol.pojo"/>
+		<package name="com.etms.terminalStatus.pojo"/>
+		<package name="com.etms.terminalType.pojo"/>
+		<package name="com.etms.terminalCommand.pojo"/>
+		<package name="com.etms.portCountConfigure.pojo"/>
+		<package name="com.etms.rs232.pojo"/>
+		<package name="com.etms.rs485.pojo"/>
+		<package name="com.etms.netPort.pojo"/>
+		<package name="com.etms.can.pojo"/>
+		<package name="com.etms.terminalLoginInfo.pojo"/>
+		<package name="com.etms.tlv.pojo"/>
+	</typeAliases>
+</configuration>

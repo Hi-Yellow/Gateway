@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.terminalType.mapper.TBdTerminalTypeMapper" >
+  <resultMap id="tBdTerminalTypeResultMap" type="com.etms.terminalType.pojo.TBdTerminalType" >
+    <result column="TypeID" property="typeId" jdbcType="INTEGER" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectAll" resultMap="tBdTerminalTypeResultMap" >
+    select * from t_bd_terminaltype
+  </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.can.mapper.TBdCANMapper" >
+  <resultMap id="tBdCANResultMap" type="com.etms.can.pojo.TBdCAN" >
+    <result column="TerminalCode" property="terminalCode" jdbcType="VARCHAR" />
+    <result column="PortID" property="portID" jdbcType="INTEGER" />
+    <result column="PortName" property="portName" jdbcType="VARCHAR" />
+    <result column="BaudRate" property="baudRate" jdbcType="INTEGER" />
+</resultMap>
+
+  <select id="selectByCode" resultMap="tBdCANResultMap">
+	  select * from t_bd_can where TerminalCode=#{terminalCode}
+  </select>
+	
+  <select id="selectByCodeAndID" resultMap="tBdCANResultMap">
+	  select * from t_bd_can where TerminalCode=#{arg0} and PortID=#{arg1}
+  </select>
+	
+  <insert id="insert">
+  	insert into t_bd_can (TerminalCode,PortID) values(#{arg0},#{arg1})
+  </insert>
+  
+  <select id="count" parameterType="String" resultType="Integer">
+    select count(1) from t_bd_can where TerminalCode=#{terminalCode}
+  </select>
+  
+  <delete id="deleteLarger">
+    delete from t_bd_can where TerminalCode=#{arg0} and PortID>#{arg1}
+  </delete>
+  
+  <delete id="deleteList">
+  	delete from t_bd_can where TerminalCode in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete>
+  
+<update id="update" parameterType="TBdCAN">
+    update t_bd_can set BaudRate=#{baudRate},PortName=#{portName} where TerminalCode=#{terminalCode} and PortID=#{portID}
+  </update>
+</mapper>

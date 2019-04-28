@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.loginInfo.mapper.LoginInfoMapper" >
+  <resultMap id="loginInfoResultMap" type="com.etms.loginInfo.pojo.LoginInfo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UserName" property="userName" jdbcType="TIMESTAMP" />
+    <result column="RealName" property="realName" jdbcType="TIMESTAMP" />
+    <result column="LoginTime" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="LogoutTime" property="logoutTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <select id="select" parameterType="LoginInfo" resultMap="loginInfoResultMap" > 
+  	select * from t_sa_logininfo 
+  </select>
+  
+  <insert id="insert" parameterType="LoginInfo">
+  	insert into t_sa_logininfo (UserName,RealName,LoginTime) 
+  	values(#{userName},#{realName},#{loginTime})
+  </insert>
+  
+  <update id="update" parameterType="LoginInfo">
+    update t_sa_logininfo set LogoutTime=#{logoutTime}
+ 	where UserName=#{userName} ORDER BY ID DESC LIMIT 1
+  </update>
+  
+  <!-- 通过多条件分页查询，返回数据集 -->
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="loginInfoResultMap" >
+    select ID,UserName,RealName,LoginTime,LogoutTime from t_sa_logininfo 
+    <where>
+    	<if test="paramEntity.userName!=null">and UserName like #{paramEntity.userName}</if>
+    	<if test="paramEntity.realName!=null">and RealName like #{paramEntity.realName}</if>
+    </where> 
+    ORDER BY ID DESC
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	select count(1) from t_sa_logininfo 
+  	<where>
+  		<if test="paramEntity.userName!=null">and UserName like #{paramEntity.userName}</if>
+    	<if test="paramEntity.realName!=null">and RealName like #{paramEntity.realName}</if>
+    </where> 
+  </select>
+  
+</mapper>

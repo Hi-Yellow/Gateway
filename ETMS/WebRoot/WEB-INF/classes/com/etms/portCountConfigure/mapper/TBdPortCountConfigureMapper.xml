@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.portCountConfigure.mapper.TBdPortCountConfigureMapper" >
+  <resultMap id="tBdPortCountConfigureResultMap" type="com.etms.portCountConfigure.pojo.TBdPortCountConfigure" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TerminalCode" property="terminalCode" jdbcType="VARCHAR" />
+    <result column="TerminalConfigureID" property="terminalConfigureID" jdbcType="INTEGER" />
+    <result column="ConfigureAlias" property="configureAlias" jdbcType="VARCHAR" />
+    <result column="TerminalTypeID" property="terminalTypeID" jdbcType="INTEGER" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+    <result column="RS485Count" property="rs485Count" jdbcType="INTEGER" />
+    <result column="RS232Count" property="rs232Count" jdbcType="INTEGER" />
+    <result column="NetworkPortCount" property="networkPortCount" jdbcType="INTEGER" />
+  	<result column="CANCount" property="cancount" jdbcType="INTEGER" />
+    
+</resultMap>
+  <select id="selectAll" resultMap="tBdPortCountConfigureResultMap" >
+    select * from v_bd_portcountconfigure
+  </select>
+  
+    <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdPortCountConfigureResultMap" >
+    SELECT * FROM v_bd_portcountconfigure 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where>
+    ORDER BY TerminalCode ASC
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	SELECT count(1) FROM v_bd_portcountconfigure
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where> 	
+  </select>
+  
+  <insert id="insert" parameterType="TBdPortCountConfigure">
+  	insert into t_bd_portcountconfigure (TerminalCode,TerminalTypeID,TerminalConfigureID,RS485Count,RS232Count,NetworkPortCount,CANCount)
+  	values(#{terminalCode},#{terminalTypeID},#{terminalConfigureID},#{rs485Count},#{rs232Count},#{networkPortCount},#{cancount})
+  </insert>
+  
+  <update id="update" parameterType="TBdPortCountConfigure">
+    update t_bd_portcountconfigure set RS485Count=#{rs485Count},RS232Count=#{rs232Count},NetworkPortCount=#{networkPortCount},CANCount=#{cancount},TerminalConfigureID=#{terminalConfigureID}
+    where TerminalCode=#{terminalCode} 
+  </update>
+  
+  <delete id="deleteList">
+  	delete from t_bd_portcountconfigure where TerminalCode in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete>
+
+</mapper>

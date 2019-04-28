@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.tlv.mapper.TBdTLVMapper" >
+  <resultMap id="tBdTLVResultMap" type="com.etms.tlv.pojo.TBdTLV" >
+    <result column="TerminalCode" property="terminalCode" jdbcType="VARCHAR" />
+    <result column="TerminalTypeID" property="terminalTypeID" jdbcType="INTEGER" />
+    <result column="UpgradeID" property="upgradeID" jdbcType="INTEGER" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+    <result column="UpgradeVersion" property="upgradeVersion" jdbcType="VARCHAR" />
+    <result column="URI" property="uri" jdbcType="VARCHAR" />
+    <result column="DownloadUsername" property="downloadUsername" jdbcType="VARCHAR" />
+    <result column="DownloadPassword" property="downloadPassword" jdbcType="VARCHAR" />
+    <result column="UpgradeType" property="upgradeType" jdbcType="INTEGER" />
+    <result column="UpgradeContent" property="upgradeContent" jdbcType="VARCHAR" />
+</resultMap>
+  <select id="selectByCode" resultMap="tBdTLVResultMap">
+	  select * from t_bd_tlv where TerminalCode=#{terminalCode}
+  </select>
+
+  <select id="selectAll" resultMap="tBdTLVResultMap" >
+    select * from v_bd_tlv
+  </select>
+  
+    <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdTLVResultMap" >
+    SELECT * FROM v_bd_tlv 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where>
+    ORDER BY TerminalCode ASC
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	SELECT count(1) FROM v_bd_tlv
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where> 	
+  </select>
+  
+  <insert id="insert" parameterType="TBdTLV">
+  	insert into t_bd_tlv (TerminalCode,TerminalTypeID,UpgradeID,UpgradeVersion,URI,DownloadUsername,DownloadPassword,UpgradeType)
+  	values(#{terminalCode},#{terminalTypeID},#{upgradeID},#{upgradeVersion},#{uri},#{downloadUsername},#{downloadPassword},#{upgradeType})
+  </insert>
+  
+  <update id="update" parameterType="TBdTLV">
+    update t_bd_tlv set UpgradeID=#{upgradeID},UpgradeVersion=#{upgradeVersion},URI=#{uri},DownloadUsername=#{downloadUsername},DownloadPassword=#{downloadPassword},UpgradeType=#{upgradeType}
+    where TerminalCode=#{terminalCode} 
+  </update>
+  
+  <delete id="deleteList">
+  	delete from t_bd_tlv where TerminalCode in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete>
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etms.terminal.mapper.TBdTerminalMapper" >
+  <resultMap id="tBdTerminalResultMap" type="com.etms.terminal.pojo.TBdTerminal" >
+    <result column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TerminalCode" property="terminalCode" jdbcType="VARCHAR" />
+    <result column="TerminalTypeID" property="terminalTypeId" jdbcType="INTEGER" />
+    <result column="MDN" property="mdn" jdbcType="VARCHAR" />
+    <result column="LoginPsw" property="loginPsw" jdbcType="VARCHAR" />
+    <result column="KPCRC" property="kpcrc" jdbcType="VARCHAR" />
+    <result column="UIMPsw" property="uimPsw" jdbcType="VARCHAR" />
+    <result column="ESN" property="esn" jdbcType="VARCHAR" />
+    <result column="MEID" property="meId" jdbcType="VARCHAR" />
+    <result column="IMSI" property="imsi" jdbcType="VARCHAR" />
+    <result column="UIMID" property="uimId" jdbcType="VARCHAR" />
+    <result column="BSID" property="bsId" jdbcType="VARCHAR" />
+    <result column="TerminalStatusID" property="terminalStatusId" jdbcType="INTEGER" />
+    <result column="TerminalProtocolID" property="terminalProtocolId" jdbcType="INTEGER" />
+    <result column="ManufacturingUnit" property="manuFacturingUnit" jdbcType="VARCHAR" />
+    <result column="TerminalModel" property="terminalModel" jdbcType="VARCHAR" />
+    <result column="SoftwareVersion" property="softwareVersion" jdbcType="VARCHAR" />
+    <result column="HardwareVersion" property="hardwareVersion" jdbcType="VARCHAR" />
+    <result column="RestartCount" property="restartCount" jdbcType="INTEGER" />
+    <result column="LoginCount" property="loginCount" jdbcType="INTEGER" />
+    <result column="RegisterTime" property="registerTime" jdbcType="VARCHAR" />
+    <result column="LoginTime" property="loginTime" jdbcType="VARCHAR" />
+    <result column="RSSI" property="rssi" jdbcType="INTEGER" />
+    <result column="TypeName" property="typeName" jdbcType="VARCHAR" />
+    <result column="StatusName" property="statusName" jdbcType="VARCHAR" />
+    <result column="ProtocolName" property="protocolName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectAll" resultMap="tBdTerminalResultMap" >
+    SELECT * FROM v_bd_terminal   
+  </select>
+  
+  <insert id="insert" parameterType="TBdTerminal">
+  	insert into t_bd_terminal (TerminalCode,TerminalTypeID,MDN,LoginPsw,KPCRC,UIMPsw,
+  							   ESN,MEID,IMSI,UIMID,BSID,TerminalStatusID,TerminalProtocolID,
+  							   ManufacturingUnit,TerminalModel,SoftwareVersion,HardwareVersion,RSSI)
+  	values(#{terminalCode},#{terminalTypeId},#{mdn},#{loginPsw},#{kpcrc},#{uimPsw},
+  	       #{esn},#{meId},#{imsi},#{uimId},#{bsId},#{terminalStatusId},#{terminalProtocolId},
+  		   #{manuFacturingUnit},#{terminalModel},#{softwareVersion},#{hardwareVersion},#{rssi})
+  </insert>
+  
+  <update id="update" parameterType="TBdTerminal">
+    update t_bd_terminal set TerminalCode=#{terminalCode},TerminalTypeID=#{terminalTypeId},MDN=#{mdn},LoginPsw=#{loginPsw},
+    						 KPCRC=#{kpcrc},UIMPsw=#{uimPsw},ESN=#{esn},MEID=#{meId},IMSI=#{imsi},UIMID=#{uimId},BSID=#{bsId},
+    						 TerminalStatusID=#{terminalStatusId},TerminalProtocolID=#{terminalProtocolId},ManufacturingUnit=#{manuFacturingUnit},
+    						 TerminalModel=#{terminalModel},SoftwareVersion=#{softwareVersion},HardwareVersion=#{hardwareVersion},RSSI=#{rssi}
+  	where ID=#{id}
+  </update>
+  
+  <select id="selectPageListUseDyc" parameterType="page" resultMap="tBdTerminalResultMap" >
+    SELECT * FROM v_bd_terminal 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where> 
+    order by TerminalCode ASC
+    limit #{start},#{rows}
+  </select>
+  
+  <!-- 通过多条件分页查询，返回总记录数 -->
+  <select id="selectPageCountUseDyc" parameterType="page" resultType="Integer">
+  	SELECT count(1) FROM v_bd_terminal 
+    <where>
+   		<if test="paramEntity.terminalCode!=null">and TerminalCode like #{paramEntity.terminalCode}</if>
+   		<if test="paramEntity.typeName!=null">and TypeName like #{paramEntity.typeName}</if>
+    </where> 	
+  </select>
+  
+  <delete id="deleteList">
+  	delete from t_bd_terminal where ID in
+	<foreach collection="array" open="(" close=")" separator="," item="pk">
+		#{pk}
+	</foreach>  
+  </delete>
+  
+</mapper>
